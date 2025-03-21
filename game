@@ -1,0 +1,37 @@
+use bevy::prelude::*;
+
+fn main() {
+    App::new()
+        .add_plugins(DefaultPlugins)
+        .add_startup_system(setup)
+        .add_system(player_movement)
+        .run();
+}
+
+#[derive(Component)]
+struct Player;
+
+fn setup(mut commands: Commands) {
+    commands.spawn(Camera2dBundle::default());
+    commands.spawn((Player, SpriteBundle::default()));
+}
+
+fn player_movement(
+    keyboard_input: Res<Input<KeyCode>>,
+    mut query: Query<&mut Transform, With<Player>>,
+) {
+    let mut transform = query.single_mut();
+    let speed = 5.0;
+    if keyboard_input.pressed(KeyCode::Left) {
+        transform.translation.x -= speed;
+    }
+    if keyboard_input.pressed(KeyCode::Right) {
+        transform.translation.x += speed;
+    }
+    if keyboard_input.pressed(KeyCode::Up) {
+        transform.translation.y += speed;
+    }
+    if keyboard_input.pressed(KeyCode::Down) {
+        transform.translation.y -= speed;
+    }
+}
